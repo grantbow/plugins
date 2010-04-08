@@ -1,0 +1,4 @@
+These plugins are being developed and tested for the Debian packaged
+version of Supybot, python software that runs and responds in IRC channels.
+These python plugins extend a Supybot with new functionality.
+

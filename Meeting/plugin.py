@@ -1,6 +1,6 @@
 
 ###
-# Copyright (c) 2004,2005,2008, Grant Bowman
+# Copyright (c) 2004,2005,2008,2010 Grant Bowman
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,6 @@ import supybot.ircutils as ircutils
 #import supybot.registry as registry
 import supybot.callbacks as callbacks
 
-
 class Meeting(callbacks.PluginRegexp):
     """ Tools for running an IRC meeting.  Currently supports hand raising and
     scripts for opening and closing meetings.  """
@@ -59,12 +58,11 @@ class Meeting(callbacks.PluginRegexp):
         self._closeScript = ''
         self._agendaScript = ''
 
-    def loadscripts(self, irc, msg, args):
-        """takes no arguments
+    def loadscripts(self, irc, msg, args, channel):
+        """[<channel>]
 
         Loads the open, close and agenda scripts from URLs.
         """
-        channel = privmsgs.getChannel(msg, args)
         x = self.registryValue('openScriptUrl', channel)
         if x:
             self._openScript = utils.web.getUrl(x)
@@ -90,12 +88,11 @@ class Meeting(callbacks.PluginRegexp):
             counter += 1
             time.sleep(1)
 
-    def agenda(self, irc, msg, args):
-        """takes no arguments
+    def agenda(self, irc, msg, args, channel):
+        """[<channel>]
 
         Gives the agenda for the meeting.
         """
-        channel = privmsgs.getChannel(msg, args)
         if self.registryValue('allowScripts', channel):
             self._outputAgenda(irc, self._agendaScript)
 
@@ -120,7 +117,6 @@ class Meeting(callbacks.PluginRegexp):
         Next agenda item.  Providing an <integer> allows for
         quicker movement.
         """
-        #channel = privmsgs.getChannel(msg, args)
         self._agendaCursor.setdefault(channel, 0)
         if not self.registryValue('allowScripts', channel):
             return -1
@@ -137,12 +133,11 @@ class Meeting(callbacks.PluginRegexp):
                                 self._agendaScript)
     next = wrap(next, [optional('channel'), optional('int')])
 
-    def current(self, irc, msg, args):
-        """takes no arguments
+    def current(self, irc, msg, args, channel):
+        """[<channel>]
 
         Current agenda item.
         """
-        channel = privmsgs.getChannel(msg, args)
         self._agendaCursor.setdefault(channel, 0)
         if not self.registryValue('allowScripts', channel):
             return -1
@@ -155,7 +150,6 @@ class Meeting(callbacks.PluginRegexp):
         Previous agenda item.  Providing an <integer> allows for
         quicker movement.
         """
-        #channel = privmsgs.getChannel(msg, args)
         self._agendaCursor.setdefault(channel, 0)
         if not self.registryValue('allowScripts', channel):
             return -1
@@ -181,21 +175,19 @@ class Meeting(callbacks.PluginRegexp):
             time.sleep(1)
 
     def open(self, irc, msg, args, channel):
-        """takes no arguments
+        """[<channel>]
 
         Gives the openinging meeting script.
         """
-        channel = privmsgs.getChannel(msg, args)
         if self.registryValue('allowScripts', channel):
             self._outputScript(irc, self._openScript)
     open = wrap(open, [('checkChannelCapability', 'op')])
 
     def close(self, irc, msg, args, channel):
-        """takes no arguments
+        """[<channel>]
 
         Gives the closing meeting script.
         """
-        channel = privmsgs.getChannel(msg, args)
         if self.registryValue('allowScripts', channel):
             self._outputScript(irc, self._closeScript)
     close = wrap(close, [('checkChannelCapability', 'op')])
@@ -238,31 +230,30 @@ class Meeting(callbacks.PluginRegexp):
             return '%s %s %s' % (firstText, self.registryValue('raisedIntro',
                     channel), utils.commaAndify(_nameList))
 
-    def hands(self, irc, msg, args):
-        """takes no arguments
+    def hands(self, irc, msg, args, channel):
+        """[<channel>]
 
         Returns the list of raised hands.
         """
-        channel = privmsgs.getChannel(msg, args)
         self.raisedHands.setdefault(channel, [])
         irc.reply(self._raisedHandsReply(channel))
+    hands = wrap(hands, [('inchannel')])
 
-    def waittimes(self, irc, msg, args):
-        """takes no arguments
+    def waittimes(self, irc, msg, args, channel):
+        """[<channel>]
 
         Returns the list of raised hands with wait times shown.
         """
-        channel = privmsgs.getChannel(msg, args)
         self.raisedHands.setdefault(channel, [])
         irc.reply(self._raisedHandsReply(channel, withTime=True))
+    waittimes = wrap(waittimes , [('inchannel')])
 
-    def clearhands(self, irc, msg, args):
-        """takes no arguments
+    def clearhands(self, irc, msg, args, channel):
+        """[<channel>]
 
         Returns the list of raised hands and clears the queue.  Should not be
         necessary very often.
         """
-        channel = privmsgs.getChannel(msg, args)
         self.raisedHands.setdefault(channel, [])
         _list = []
         for it in self.raisedHands[channel]:
@@ -270,11 +261,12 @@ class Meeting(callbacks.PluginRegexp):
         irc.reply('Clearing raised hands - ' + utils.commaAndify(_list))
         self.raisedHands[channel] = []
         # needs security
+    clearhands = wrap(clearhands, [('checkChannelCapability', 'op', 'inchannel')])
 
     def meetingHand(self, irc, msg, match):
         r"^([hH]and).?.?$"
+	channel = msg.args[0]
         hit = False
-        channel = privmsgs.getChannel(msg)
         self.raisedHands.setdefault(channel, [])
         for tuple in self.raisedHands[channel]:
             if msg.nick == tuple[0]:
@@ -303,8 +295,8 @@ class Meeting(callbacks.PluginRegexp):
 
     def meetingDone(self, irc, msg, match):
         r"([dD]one|[uU]nhand).?.?$"
+	channel = msg.args[0]
         hit = False
-        channel = privmsgs.getChannel(msg)
         self.raisedHands.setdefault(channel, [])
         for tuple in self.raisedHands[channel]:
             # remove all of nick's entries, though only one should exist

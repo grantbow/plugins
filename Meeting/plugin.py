@@ -47,8 +47,8 @@ class Meeting(callbacks.PluginRegexp):
     threaded = True
     regexps = ['meetingHand', 'meetingDone']
 
-    def __init__(self):
-        callbacks.PluginRegexp.__init__(self)
+    def __init__(self, irc):
+        callbacks.PluginRegexp.__init__(self, irc)
         self.raisedHands = {} # key is channel, values are a list of tuples
         # example: {'#channel': [('name1', timeInt1), ('name2', timeInt2),]}
         # purposely not using ChannelUserDB or ChannelUserDictionary since I
@@ -135,7 +135,7 @@ class Meeting(callbacks.PluginRegexp):
             return
         self._outputAgendaItem(irc, self._agendaCursor[channel],
                                 self._agendaScript)
-    next = wrap(next, [optional('channel'), optional('integer')])
+    next = wrap(next, [optional('channel'), optional('int')])
 
     def current(self, irc, msg, args):
         """takes no arguments
@@ -170,7 +170,7 @@ class Meeting(callbacks.PluginRegexp):
             return
         self._outputAgendaItem(irc, self._agendaCursor[channel],
                                 self._agendaScript)
-    previous = wrap(previous, [optional('channel'), optional('integer')])
+    previous = wrap(previous, [optional('channel'), optional('int')])
 
     def _outputScript(self, irc, scriptText):
         """

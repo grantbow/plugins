@@ -124,9 +124,9 @@ class Meeting(callbacks.PluginRegexp):
         self._agendaCursor.setdefault(channel, 0)
         if not self.registryValue('allowScripts', channel):
             return -1
-        if xJump
+        if xJump:
             self._agendaCursor[channel] += xJump
-        else
+        else:
             self._agendaCursor[channel] += 1
         x = len(self._agendaScript.splitlines()) - 1
         if self._agendaCursor[channel] > x:
@@ -160,9 +160,9 @@ class Meeting(callbacks.PluginRegexp):
         if not self.registryValue('allowScripts', channel):
             return -1
         self._agendaCursor[channel] -= 1
-        if xJump
+        if xJump:
             x = len(self._agendaScript.splitlines()) - xJump
-        else
+        else:
             x = len(self._agendaScript.splitlines()) - 1
         if self._agendaCursor[channel] < 0:
             self._agendaCursor[channel] = 0

@@ -40,6 +40,8 @@ import supybot.ircutils as ircutils
 #import supybot.registry as registry
 import supybot.callbacks as callbacks
 
+# Todo: add registry value for impatient hand raisers without verbose
+
 class Meeting(callbacks.PluginRegexp):
     """ Tools for running an IRC meeting.  Currently supports hand raising and
     scripts for opening and closing meetings.  """
@@ -73,6 +75,7 @@ class Meeting(callbacks.PluginRegexp):
         if x:
             self._agendaScript = utils.web.getUrl(x)
         irc.replySuccess()
+    loadscripts = wrap(loadscripts, [optional('channel')])
 
     def _outputAgenda(self, irc, scriptText):
         """
@@ -95,6 +98,7 @@ class Meeting(callbacks.PluginRegexp):
         """
         if self.registryValue('allowScripts', channel):
             self._outputAgenda(irc, self._agendaScript)
+    agenda = wrap(agenda, [optional('channel')])
 
     def _outputAgendaItem(self, irc, pointer, scriptText):
         """
@@ -136,13 +140,14 @@ class Meeting(callbacks.PluginRegexp):
     def current(self, irc, msg, args, channel):
         """[<channel>]
 
-        Current agenda item.
+        Reminds channel of the current agenda item.
         """
         self._agendaCursor.setdefault(channel, 0)
         if not self.registryValue('allowScripts', channel):
             return -1
         self._outputAgendaItem(irc, self._agendaCursor[channel],
                                 self._agendaScript)
+    current = wrap(current, [optional('channel')])
 
     def previous(self, irc, msg, args, channel, xJump):
         """[<channel>] [<integer>]
@@ -228,7 +233,7 @@ class Meeting(callbacks.PluginRegexp):
                     else:
                         _nameList.append('%s' % (tuple[0]))
             return '%s %s %s' % (firstText, self.registryValue('raisedIntro',
-                    channel), utils.commaAndify(_nameList))
+                    channel), utils.str.commaAndify(_nameList))
 
     def hands(self, irc, msg, args, channel):
         """[<channel>]
@@ -258,7 +263,7 @@ class Meeting(callbacks.PluginRegexp):
         _list = []
         for it in self.raisedHands[channel]:
             _list.append(it[0])
-        irc.reply('Clearing raised hands - ' + utils.commaAndify(_list))
+        irc.reply('Clearing raised hands - ' + utils.str.commaAndify(_list))
         self.raisedHands[channel] = []
         # needs security
     clearhands = wrap(clearhands, [('checkChannelCapability', 'op', 'inchannel')])
@@ -283,6 +288,8 @@ class Meeting(callbacks.PluginRegexp):
                         irc.reply('Your hand has been raised ' +
                             '%s minutes and %s seconds.' % (str(m), str(s)))
                     else:
+                        # Todo: could respond with "Please wait your turn."
+                        # needs new registry entry for text
                         irc.reply(self.registryValue('confirm', channel))
         if not hit:
             # append tuple (msg.nick, int(time.time)) to channel's list

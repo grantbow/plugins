@@ -73,12 +73,29 @@ pylogo = """    ...
     :  o:
     `...' """
 
-
 ubuntutext = """      | |               | |
  _   _| |__  _   _ _ __ | |_ _   _
 | | | | '_ \| | | | '_ \| __| | | |
 | |_| | |_) | |_| | | | | |_| |_| |
  \__,_|_.__/ \__,_|_| |_|\__|\__,_|"""
+
+ dfish = """
+                  aa##WWg,
+                JJ00' 44LL.
+               J0000wwjj##00
+               ##0000000000@@
+              40000000Y'^^
+             J00000000Yaaaap
+           .00000000000000ll
+    __     jj000000000000##'
+  j###LL  .000000000000@@((
+  j###00..j0000000000000''
+  -0000000000000000##''
+   40000000000000@@''
+   jj0000000000!!
+   jj00000099'
+   jj!!!!
+ """
 
 
 class AsciiArt(callbacks.Plugin):
@@ -143,6 +160,14 @@ class AsciiArt(callbacks.Plugin):
         Display of crafted art.  http://www.ubuntu.com
         """
         self._outputArt(irc, ubuntutext)
+
+    def dfish(self, irc, msg, args):
+        """takes no arguments
+
+        Display of crafted art.  http://www.dreamfish.com
+        """
+        self._outputArt(irc, dfish)
+
 
 
 Class = AsciiArt

@@ -100,9 +100,9 @@ fedoralogo= """     .MMMMMMMMM.
  MMMMMMMM  MMMMMooMM
 MMMMoo\"\"\"  \"\"\"oooMMM
 MMMooo\"      \"ooMMMM
-\"MooMMMMM  MMMMMMMMM
-\"MooM\"\"\"  \"MMMMMMM\"
-\"MMo     \"MMMMMMM\"
+MMooMMMMM  MMMMMMMMM
+MMooM\"\"\"  \"MMMMMMM\"
+MMMo     \"MMMMMMM\"
  \"MMMM MMMMMMM\" """
 
 class AsciiArt(callbacks.Plugin):

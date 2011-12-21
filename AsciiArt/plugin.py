@@ -94,7 +94,16 @@ dfish = """                  aa##WWg,
    jj0000000000!!
    jj00000099'
    jj!!!! """
-
+fedoralogo= """     .MMMMMMMMM.
+   .MMMMMM\"    oo.
+ .MMMMMMM\"  \"\"\"MooM
+ MMMMMMMM  MMMMMooMM
+MMMMoo\"\"\"  \"\"\"oooMMM
+MMMooo\"      \"ooMMMM
+\"MooMMMMM  MMMMMMMMM
+\"MooM\"\"\"  \"MMMMMMM\"
+\"MMo     \"MMMMMMM\"
+ \"MMMM MMMMMMM\" """
 
 class AsciiArt(callbacks.Plugin):
     """Commands will display ascii artwork.  Use with caution."""
@@ -165,6 +174,13 @@ class AsciiArt(callbacks.Plugin):
         Display of crafted art.  http://www.dreamfish.com
         """
         self._outputArt(irc, dfish)
+
+    def fedoralogo(self, irc, msg, args):
+        """takes no arguments
+
+        Display of crafted art.  http://fedoraproject.org
+        """
+        self._outputArt(irc, fedoralogo)
 
 
 

@@ -97,8 +97,8 @@ dfish = """                  aa##WWg,
 fedoralogo= """     .MMMMMMMMM.
    .MMMMMM\"    oo.
  .MMMMMMM\"  \"\"\"MooM
- MMMMMMMM  MMMMMooMM
-MMMMoo\"\"\"  \"\"\"oooMM.
+ MMMMMMMM  MMMMMooM.
+MMMMoo\"\"\"  \"\"\"oooMMM
 MMMooo\"      \"ooMMMM
 MMooMMMMM  MMMMMMMM.
 MMooM\"\"\"  \"MMMMMMM\"

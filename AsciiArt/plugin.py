@@ -98,9 +98,9 @@ fedoralogo= """     .MMMMMMMMM.
    .MMMMMM\"    oo.
  .MMMMMMM\"  \"\"\"MooM
  MMMMMMMM  MMMMMooMM
-MMMMoo\"\"\"  \"\"\"oooMMM
+MMMMoo\"\"\"  \"\"\"oooMM.
 MMMooo\"      \"ooMMMM
-MMooMMMMM  MMMMMMMMM
+MMooMMMMM  MMMMMMMM.
 MMooM\"\"\"  \"MMMMMMM\"
 MMMo     \"MMMMMMM\"
  \"MMMM MMMMMMM\" """
